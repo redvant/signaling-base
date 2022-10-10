@@ -1,0 +1,30 @@
+version: "3"
+
+volumes:
+  records:
+
+services:
+  kurento:
+    #don't forget specific the version
+    image: "kurento/kurento-media-server:latest"
+    volumes:
+      - records:/home/records/video
+    ports:
+      - "8888:8888/tcp"
+      - "5000-5050:5000-5050/udp"
+    environment:
+      - KMS_MIN_PORT=5000
+      - KMS_MAX_PORT=5050
+    networks:
+      - kurento-network
+
+  signaling:
+    build: .
+    ports:
+      - "8443:8443"
+    networks:
+      - kurento-network
+
+networks:
+  # The presence of these objects is sufficient to define them
+  kurento-network: {}
